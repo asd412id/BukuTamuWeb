@@ -14,6 +14,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['prefix'=>'v1'], function()
+{
+  Route::get('/', function()
+  {
+    return response()->json([
+      'status'=>'error',
+      'message'=>'Access Denied!',
+    ],403);
+  });
+  Route::get('/connect', 'MobileApiController@index');
+  Route::post('/visit', 'MobileApiController@startVisit');
+  Route::put('/visit', 'MobileApiController@endVisit');
 });

@@ -25,6 +25,7 @@ class CreateTableGuest extends Migration
             $table->datetime('cin')->nullable();
             $table->datetime('cout')->nullable();
             $table->bigInteger('instansi_id');
+            $table->string('_token');
             $table->tinyInteger('rating')->nullable();
             $table->text('kesan')->nullable();
             $table->timestamps();

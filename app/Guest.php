@@ -31,4 +31,30 @@ class Guest extends Model
   protected $casts = [
     'anggota' => 'array'
   ];
+
+  public function getRatingTextAttribute()
+  {
+    if (!$this->rating) {
+      return null;
+    }
+    switch ($this->rating) {
+      case 5:
+        $text = 'Memuaskan';
+        break;
+      case 4:
+        $text = 'Sangat Baik';
+        break;
+      case 3:
+        $text = 'Baik';
+        break;
+      case 2:
+        $text = 'Buruk';
+        break;
+      default:
+        $text = 'Mengecewakan';
+        break;
+    }
+
+    return $text;
+  }
 }

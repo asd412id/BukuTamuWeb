@@ -16,6 +16,7 @@ use Validator;
 use Storage;
 use Carbon\Carbon;
 use PDF;
+use Str;
 
 class MainController extends BaseController
 {
@@ -33,6 +34,7 @@ class MainController extends BaseController
     ->when(auth()->user()->role!='admin',function($q,$r){
       $q->where('instansi_id',auth()->user()->instansi_id);
     })
+    ->distinct('_token')
     ->count();
     $guestMonth = Guest::whereNotNull('cin')
     ->when(auth()->user()->role!='admin',function($q,$r){
@@ -40,6 +42,7 @@ class MainController extends BaseController
     })
     ->where('cin','>=',$now->copy()->startOfMonth()->format('Y-m-d H:i:s'))
     ->where('cin','<=',$now->copy()->endOfMonth()->format('Y-m-d H:i:s'))
+    ->distinct('_token')
     ->count();
     $guestWeek = Guest::whereNotNull('cin')
     ->when(auth()->user()->role!='admin',function($q,$r){
@@ -47,6 +50,7 @@ class MainController extends BaseController
     })
     ->where('cin','>=',$now->copy()->startOfWeek()->format('Y-m-d H:i:s'))
     ->where('cin','<=',$now->copy()->endOfWeek()->format('Y-m-d H:i:s'))
+    ->distinct('_token')
     ->count();
     $guestDay = Guest::whereNotNull('cin')
     ->when(auth()->user()->role!='admin',function($q,$r){
@@ -54,6 +58,7 @@ class MainController extends BaseController
     })
     ->where('cin','>=',$now->copy()->startOfDay()->format('Y-m-d H:i:s'))
     ->where('cin','<=',$now->copy()->endOfDay()->format('Y-m-d H:i:s'))
+    ->distinct('_token')
     ->count();
 
     $data = [
@@ -270,13 +275,33 @@ class MainController extends BaseController
     return redirect()->back()->withErrors(['Logo gagal dihapus!']);
   }
 
+  public function genKey($url)
+  {
+    $k = Str::random(10);
+    if (strpos($url,$k)!==false) {
+      return $this->genKey($url);
+    }
+    return $k;
+  }
+
   public function printQR()
   {
     $user = auth()->user();
     $configs = $user->configs_all;
+    $url = base64_encode(@$configs->alamat_server??url('/'));
+    $min = ceil(strlen($url)/2);
+    $u2 = substr($url,0,$min);
+    $u1 = substr($url,$min,strlen($url));
+
+    $key = $this->genKey($url);
+
+    $generate = $u1.'.'.$user->instansi->_token.'.'.$key.'.'.$u2;
+
+    $_token = str_replace('=',$key,$generate);
+
     $data = [
-      'title' => 'Kode QR Buku Tamu - '.$configs->nama_instansi,
-      'instansi'=>$user->instansi,
+      'title' => 'Kode QR Buku Tamu - '.@$configs->nama_instansi??'UPTD SMPN 39 SINJAI',
+      '_token'=>$_token,
       'configs'=>$configs,
     ];
 
@@ -289,7 +314,7 @@ class MainController extends BaseController
 
     $pdf = PDF::loadView('configs.print',$data)
     ->setOptions($params);
-    return $pdf->download($filename);
+    return $pdf->stream($filename);
 
   }
 

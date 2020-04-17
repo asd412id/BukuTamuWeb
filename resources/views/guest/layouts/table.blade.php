@@ -10,7 +10,7 @@
       <th>No. Telp</th>
       <th width="200">Alamat</th>
       <th width="200">Tujuan</th>
-      <th width="200">Kesan</th>
+      <th width="200">Rating/Kesan</th>
     </thead>
     <tbody>
       @foreach ($data as $key => $d)
@@ -19,10 +19,10 @@
             <td rowspan="{{ count($d['data']) }}">{{ $d['tanggal']->locale('id')->translatedFormat('l, d/m/Y') }}</td>
           @endif
           @foreach ($d['data'] as $key => $g)
-            <td class="text-center nowrap">{{ $g->cin->format('H:i').' - '.$g->cout->format('H:i') }}</td>
+            <td class="text-center nowrap">{{ $g->cin->format('H:i').($g->cout?' - '.$g->cout->format('H:i'):null) }}</td>
             <td>
               <strong>{{ $g->nama }}</strong>
-              @if (count($g->anggota))
+              @if ($g->anggota && count($g->anggota))
                 <br><span style="text-decoration: underline">bersama dengan:</span>
                 <ol style="margin: 0;padding: 0 15px;">
                   @foreach ($g->anggota as $k1 => $ag)
@@ -35,7 +35,7 @@
             <td class="nowrap">{{ $g->telp }}</td>
             <td>{{ $g->alamat }}</td>
             <td>{{ $g->tujuan }}</td>
-            <td>{{ $g->kesan }}</td>
+            <td>Rating: <strong style="text-decoration: underline">{{ $g->rating_text??'Tidak ada' }}</strong><br>{{ $g->kesan }}</td>
             @break
           @endforeach
           @php
@@ -45,10 +45,10 @@
         @if (count($d['data']))
           @foreach ($d['data'] as $key => $g)
             <tr>
-              <td class="text-center nowrap">{{ $g->cin->format('H:i').' - '.$g->cout->format('H:i') }}</td>
+              <td class="text-center nowrap">{{ $g->cin->format('H:i').($g->cout?' - '.$g->cout->format('H:i'):null) }}</td>
               <td>
                 <strong>{{ $g->nama }}</strong>
-                @if (count($g->anggota))
+                @if ($g->anggota && count($g->anggota))
                   <br><span style="text-decoration: underline">bersama dengan:</span>
                   <ol style="margin: 0;padding: 0 15px;">
                     @foreach ($g->anggota as $k1 => $ag)
@@ -61,7 +61,7 @@
               <td class="nowrap">{{ $g->telp }}</td>
               <td>{{ $g->alamat }}</td>
               <td>{{ $g->tujuan }}</td>
-              <td>{{ $g->kesan }}</td>
+              <td>Rating: <strong style="text-decoration: underline">{{ $g->rating_text??'Tidak ada' }}</strong><br>{{ $g->kesan }}</td>
             </tr>
           @endforeach
         @endif
