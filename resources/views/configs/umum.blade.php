@@ -70,6 +70,12 @@
               </span>
             </div>
           </div>
+          @if (auth()->user()->is_admin)
+            <div class="form-group">
+              <label>Alamat Server</label>
+              <input type="text" class="form-control" value="{{ old('config')['alamat_server']??@$config->alamat_server }}" name="config[alamat_server]" placeholder="{{ url('/') }}" id="alamat_server" required>
+            </div>
+          @endif
           @if (auth()->user()->role!='admin')
             <div class="form-group">
               <label>Logo 2 (Contoh: Logo Instansi)</label>
@@ -100,12 +106,8 @@
                 <input type="text" class="form-control" value="{{ old('config')['end_clock']??@$config->end_clock }}" name="config[end_clock]" id="end_clock">
               </div>
             </div>
-            <div class="form-group">
-              <label>Alamat Server</label>
-              <input type="text" class="form-control" value="{{ old('config')['alamat_server']??@$config->alamat_server }}" name="config[alamat_server]" placeholder="{{ url('/') }}" id="alamat_server" required>
-            </div>
             <div class="form-group text-center pt-30">
-              <a href="{{ route('configs.print.qr') }}" target="_blank" class="btn btn-success text-uppercase" style="font-size:2em;height: auto;padding: 7px 15px;width: auto;line-height: 1em"><i class="fas fa-qrcode"></i> Cetak Kode QR</a>
+              <a href="{{ route('configs.print.qr') }}" target="_blank" class="btn btn-success text-uppercase direct" style="font-size:2em;height: auto;padding: 7px 15px;width: auto;line-height: 1em"><i class="fas fa-qrcode"></i> Cetak Kode QR</a>
             </div>
           @endif
         </div>

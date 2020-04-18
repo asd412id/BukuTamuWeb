@@ -288,7 +288,8 @@ class MainController extends BaseController
   {
     $user = auth()->user();
     $configs = $user->configs_all;
-    $url = base64_encode(@$configs->alamat_server??url('/'));
+    $alamat_server = @Configs::getAll()->alamat_server;
+    $url = base64_encode($alamat_server??url('/'));
     $min = ceil(strlen($url)/2);
     $u2 = substr($url,0,$min);
     $u1 = substr($url,$min,strlen($url));
