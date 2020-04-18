@@ -80,10 +80,15 @@ class MobileApiController extends Controller
       $insert->tujuan = $guest->tujuan;
       $insert->anggota = @$guest->anggota?explode("\n",$guest->anggota):null;
       $insert->cin = Carbon::now();
+      $insert->cout = null;
+      $insert->rating = null;
+      $insert->kesan = null;
       $insert->instansi_id = $instansi->id;
       $insert->_token = $guest->_token;
 
       if ($insert->save()) {
+        $insert->start_visit = $insert->cin->locale('id')->translatedFormat('j F Y H:i');
+        $insert->instansi = $instansi;
         $code = $this->acc_code;
         $data = [
           'status'=>'success',
@@ -117,9 +122,12 @@ class MobileApiController extends Controller
 
       if ($guest->save()) {
         $code = $this->acc_code;
+        $guest->start_visit = $guest->cin->locale('id')->translatedFormat('j F Y H:i');
+        $guest->end_visit = $guest->cout->locale('id')->translatedFormat('j F Y H:i');
+        $guest->instansi = $guest->instansi;
         $data = [
           'status'=>'success',
-          'data'=>'Terima Kasih atas Kunjungan Anda'
+          'data'=>$guest
         ];
       }else {
         $data = [

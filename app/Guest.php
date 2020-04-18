@@ -23,13 +23,10 @@ class Guest extends Model
     'kesan'
   ];
 
-  protected $dates = [
-    'cin',
-    'cout'
-  ];
-
   protected $casts = [
-    'anggota' => 'array'
+    'anggota' => 'array',
+    'cin'=>'datetime',
+    'cout'=>'datetime'
   ];
 
   public function getRatingTextAttribute()
