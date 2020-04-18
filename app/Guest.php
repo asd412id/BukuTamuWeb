@@ -54,4 +54,9 @@ class Guest extends Model
 
     return $text;
   }
+
+  public function getInstansi()
+  {
+    return $this->belongsTo(\App\Instansi::class,'instansi_id');
+  }
 }

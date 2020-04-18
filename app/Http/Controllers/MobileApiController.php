@@ -70,6 +70,8 @@ class MobileApiController extends Controller
       ];
     }else {
       $guest = json_decode($r->header('user-data'));
+      $configs = $instansi->configs_all;
+      $instansi->nama = @$configs->nama_instansi??$instansi->nama;
 
       $insert = new Guest;
       $insert->uuid = Str::uuid();
@@ -119,12 +121,15 @@ class MobileApiController extends Controller
       $guest->cout = Carbon::now();
       $guest->rating = $r->header('rating');
       $guest->kesan = $r->header('kesan');
+      $instansi = $guest->getInstansi;
+      $configs = $instansi->configs_all;
+      $instansi->nama = @$configs->nama_instansi??$instansi->nama;
 
       if ($guest->save()) {
         $code = $this->acc_code;
         $guest->start_visit = $guest->cin->locale('id')->translatedFormat('j F Y H:i');
         $guest->end_visit = $guest->cout->locale('id')->translatedFormat('j F Y H:i');
-        $guest->instansi = $guest->instansi;
+        $guest->instansi = $instansi;
         $data = [
           'status'=>'success',
           'data'=>$guest
