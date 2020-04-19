@@ -182,7 +182,7 @@ class MainController extends BaseController
   {
     $data = [
       'config'=>Configs::getAll(),
-      'title' => 'Masuk Halaman Admin  - '.(@$this->config->nama_instansi??'UPTD SMP NEGERI 39 SINJAI')
+      'title' => 'Masuk Halaman Admin  - '.(@Configs::getAll()->nama_instansi??'UPTD SMP NEGERI 39 SINJAI')
     ];
 
     return view('login',$data);
