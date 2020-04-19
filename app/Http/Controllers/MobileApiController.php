@@ -32,7 +32,7 @@ class MobileApiController extends Controller
       $dataInstansi = $instansi;
       $configs = $instansi->configs_all;
       $dataInstansi->nama = @$configs->nama_instansi??$instansi->nama;
-      if ($configs && $configs->start_clock && $configs->end_clock) {
+      if ($configs && @$configs->start_clock && @$configs->end_clock) {
         $start = Carbon::createFromFormat('H:i',$configs->start_clock);
         $end = Carbon::createFromFormat('H:i',$configs->end_clock);
         $now = Carbon::now();
