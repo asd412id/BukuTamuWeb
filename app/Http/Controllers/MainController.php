@@ -101,9 +101,9 @@ class MainController extends BaseController
         return redirect()->back()->withErrors('File Background Login harus berekstensi jpg, jpeg, atau png')->withInput();
       }
 
-      $getLogo1 = Configs::where('config','login_bg')->first();
-      if ($getLogo1) {
-        Storage::disk('public')->delete($getLogo1->value);
+      $getloginbg = Configs::where('config','login_bg')->first();
+      if ($getloginbg) {
+        Storage::disk('public')->delete($getloginbg->value);
       }
 
       $filepathLoginBG = $login_bg->store('file_configs','public');
@@ -125,7 +125,9 @@ class MainController extends BaseController
         return redirect()->back()->withErrors('File Logo 1 harus berekstensi jpg, jpeg, atau png')->withInput();
       }
 
-      $getLogo1 = Configs::where('config','logo1')->first();
+      $getLogo1 = Configs::where('config','logo1')
+      ->where('instansi_id',$instansi_id)
+      ->first();
       if ($getLogo1) {
         Storage::disk('public')->delete($getLogo1->value);
       }
@@ -149,7 +151,9 @@ class MainController extends BaseController
       }elseif (!in_array(strtolower($peta_ext),$allowed_ext)) {
         return redirect()->back()->withErrors('File Logo 2 harus berekstensi jpg, jpeg, atau png')->withInput();
       }
-      $getLogo2 = Configs::where('config','logo2')->first();
+      $getLogo2 = Configs::where('config','logo2')
+      ->where('instansi_id',$instansi_id)
+      ->first();
       if ($getLogo2) {
         Storage::disk('public')->delete($getLogo2->value);
       }
