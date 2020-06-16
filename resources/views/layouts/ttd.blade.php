@@ -1,6 +1,3 @@
-@php
-  $configs = \App\Configs::getAll();
-@endphp
 <div class="clearfix"></div>
 <table class="" style="margin-top: 25px;float: right;page-break-inside: avoid !important;white-space: nowrap;">
   <tr>
